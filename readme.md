@@ -30,6 +30,8 @@ Now we have a bitmap containing height values in the R channel and light/shadow 
 
 This bitmap is uploaded to video memory as a texture which can be sampled by the grass and terrain shaders.
 
+For an in-depth article on terrain rendering with more advanced techniques for landscape detail, levels of detail by distance and texture types, see Jasmine Kent's [Gamasutra article](http://www.gamasutra.com/blogs/JasmineKent/20130904/199521/WebGL_Terrain_Rendering_in_Trigger_Rally__Part_1.php).
+
 ### Grass improvements
 
 My previous demo took a lot of shortcuts to generate the grass geometry and animate it. This time I wanted to improve on that in a number of ways.
