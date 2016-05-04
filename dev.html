@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<!--
+	'Terra'
+	© 2016 by Mike Linkovich
+	www.spacejack.ca
+-->
+	<meta name="viewport" content="width=device-width,initial-scale=1"/>
+	<meta name="mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<title>Terra - spacejack.ca</title>
+	<meta property="og:title" content="Terra" />
+	<meta property="og:description" content="Rendering terrain with grass with a vertex shader" />
+	<meta property="og:image" content="http://www.spacejack.ca/projects/terra/img/share.jpg" />
+	<link type="text/css" rel="stylesheet" href="css/style.css" media="screen"/>
+</head>
+
+<body>
+	<div id="content_container">
+		<div id="app_container">
+
+			<div id="app_canvas_container"><canvas id="app_canvas" style="background:#FFF"></canvas></div>
+
+			<div id="app_ui_container">
+
+				<div id="title_bar" style="display:none">
+					<div id="title_bar_left" class="noselect"><a href="/">spacejack.ca</a></div>
+					<div id="title_bar_right" class="noselect">
+						<img id="btn_restart" class="btn_icon" src="img/options.svg" width="20" height="20" alt="options"/>
+						<img id="btn_fullscreen" class="btn_icon" src="img/fullscreen.svg" width="20" height="20" alt="fullscreen"/>
+					</div>
+				</div>
+
+				<div id="loading_block">
+					<div id="loading_title" class="noselect">terra</div>
+					<p>&copy; 2016 by Mike Linkovich | <a href="http://www.spacejack.ca/">www.spacejack.ca</a> | <a href="https://github.com/spacejack/terra">source</a></p>
+					<p style="font-size:0.9em;font-style:italic;margin:0">Made with <strong><a href="http://threejs.org/" target="_blank">three.js</a></strong></p>
+					<div id="loading_bar_outer">
+						<div id="loading_bar"></div>
+					</div>
+					<div id="loading_text">loading</div>
+					<div id="config_block" style="visibility:hidden">
+						<h3>AUTO CONFIG:</h3>
+						<p>
+							<select id="sel_devicepower">
+								<option value="mobile">mobile device</option>
+								<option value="laptop">low power laptop</option>
+								<option value="desktop">medium power laptop/desktop</option>
+								<option value="desktop2">high power laptop/desktop</option>
+								<option value="gamerig">gaming rig</option>
+							</select>
+						</p>
+
+						<h3>MANUAL CONFIG:</h3>
+						<table class="tbl_config">
+							<tr>
+								<td class="noselect">BLADES:</td>
+								<td><input id="inp_blades" type="range" min="1000" max="500000" value="60000" style="width:15em" /></td>
+								<td><span id="txt_blades" class="cfg_value noselect">65000</span></td>
+							</tr>
+							<tr>
+								<td class="noselect">DEPTH:</td>
+								<td><input id="inp_depth" type="range" min="40" max="200" value="85" style="width:15em" /></td>
+								<td><span id="txt_depth" class="cfg_value noselect">85</span></td>
+							</tr>
+						</table><br/>
+
+						<div style="display:inline-block;text-align:left">
+							<p><input type="checkbox" id="chk_antialias" checked> <span class="noselect">ANTIALIASING</span></p>
+							<p><input type="checkbox" id="chk_audio"> <span class="noselect">CHOPIN</span></p>
+							<p><input type="checkbox" id="chk_fullscreen"> <span class="noselect">FULL SCREEN</span></p>
+						</div>
+						<p id="txt_controls" class="noselect"><span class="key">ENTER</span> cycle camera types, <span class="key">ARROWS</span> drive, <span class="key">W</span> <span class="key">S</span> elevation, <span class="key">Q</span> <span class="key">A</span> pitch</p>
+						<p><button id="btn_start" type="button" style="font-size:2em">START</button></p>
+					</div>
+				</div>
+
+				<div id="notification" style="display:none"><div id="notification_text"></div></div>
+
+				<div id="logger" style="display:none">logger</div>
+
+				<audio id="chopin" src="audio/chopin-nocturne-in-d-flat-major-op-27-no-2.mp3" style="display:none" />
+
+			</div>
+		</div>
+	</div>
+
+	<script src="js/vendor/three.js"></script>
+	<script src="js/vendor/almond.js"></script>
+	<script src="js/terrain.js"></script>
+	<script>
+		require(['main'], function(m){m.boot()})
+	</script>
+</body>
+</html>

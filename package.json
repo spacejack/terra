@@ -1,0 +1,16 @@
+{
+  "name": "terrain",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Terrain",
+  "licence": "UNLICENSED",
+  "author": "Mike Linkovich",
+  "scripts": {
+    "build-dev": "tsc",
+    "build-prod": "tsc && uglifyjs js/terrain.js -cm -o js/terrain.min.js && node build-index",
+    "clean": "rm js/*.* index.html"
+  },
+  "devDependencies": {
+    "uglify-js": "latest"
+  }
+}
