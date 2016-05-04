@@ -4,7 +4,7 @@
 
 ---
 
-## [Run the Demo](http://www.spacejack.ca/projects/terrain/)
+## [Run the Demo](http://www.spacejack.ca/projects/terra/)
 
 This is a followup to a [previous experiment](http://github.com/spacejack/poaceae) to render grass as geometry with a vertex shader. This demo adds terrain elevation, lighting, wind, water and improves on a number of other details.
 
