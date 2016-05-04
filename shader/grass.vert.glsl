@@ -133,10 +133,7 @@ void main() {
 	vpos.y += bladePos.y;
 	vpos.z += altitude;
 
-	// Compute light based on rotation angle of blade
-	// and depending on which side of the blade this vertex is on
-	// and depending on how high up the blade we are
-	// TODO: calculate normal?
+	// Compute light for this vertex
 	float c = max(-dot(normal, lightDir), 0.0);
 	c = max(c - (1.0 - hpct) * 0.75, 0.0);
 	c = 0.3 + 0.7 * c;
