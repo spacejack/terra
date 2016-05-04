@@ -1,0 +1,7 @@
+node_modules
+js/*.js
+js/*.map
+index.html
+creative
+npm-debug.log
+*.db
