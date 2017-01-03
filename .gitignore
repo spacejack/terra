@@ -1,7 +1,5 @@
 node_modules
-js/*.js
-js/*.map
-index.html
+public/js/terra.js
 creative
 npm-debug.log
 *.db
