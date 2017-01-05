@@ -9,7 +9,7 @@
 import {nrand} from './gmath'
 import {Vec2, Vec3, Color} from './vec'
 import simplex from './simplex'
-import * as bufferset from './bufferSet'
+import * as bufferset from './bufferset'
 type BufferSet = bufferset.BufferSet
 
 const BLADE_SEGS = 4 // # of blade segments
