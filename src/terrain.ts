@@ -87,9 +87,9 @@ function createMesh(opts: Options) {
 	const hscale = opts.heightMapScale
 
 	const fragScript = opts.fragScript.replace(
-		'%%TRANSITION_LOW%%', (opts.transitionLow).toFixed(1)
+		'%%TRANSITION_LOW%%', opts.transitionLow.toString()
 	).replace(
-		'%%TRANSITION_HIGH%%', (opts.transitionHigh).toFixed(1)
+		'%%TRANSITION_HIGH%%', opts.transitionHigh.toString()
 	)
 
 	const mat = new THREE.RawShaderMaterial({

@@ -91,9 +91,9 @@ export function createMesh (opts: Options) {
 	).replace(
 		'%%PATCH_SIZE%%', (opts.radius * 2.0).toFixed(1)
 	).replace(
-		'%%TRANSITION_LOW%%', (opts.transitionLow).toFixed(1)
+		'%%TRANSITION_LOW%%', opts.transitionLow.toString()
 	).replace(
-		'%%TRANSITION_HIGH%%', (opts.transitionHigh).toFixed(1)
+		'%%TRANSITION_HIGH%%', opts.transitionHigh.toString()
 	)
 
 	// Setup shader
