@@ -78,7 +78,7 @@ export function create (info: Options): Heightfield {
 		hf.xCount = info.xCount && info.xCount > 0 ? Math.floor(info.xCount) : 1
 		hf.yCount = info.yCount && info.yCount > 0 ? Math.floor(info.yCount) : 1
 		hf.xSize = hf.xCount * hf.cellSize
-		hf.ySize = info.yCount * hf.cellSize
+		hf.ySize = info.yCount! * hf.cellSize
 		hf.heights = info.heights || new Float32Array((hf.xCount + 1) * (hf.yCount + 1))
 		// 2 normals per cell (quad)
 		hf.faceNormals = new Float32Array(3 * 2 * hf.xCount * hf.yCount)
