@@ -14,14 +14,14 @@
     "start": "npm-run-all -p watch serve"
   },
   "devDependencies": {
-    "@types/three": "0.83.5",
-    "browserify": "^14.1.0",
-    "http-server": "^0.9.0",
-    "npm-run-all": "^4.0.2",
-    "tsify": "^3.0.1",
+    "@types/three": "0.89.2",
+    "browserify": "^15.2.0",
+    "http-server": "^0.11.1",
+    "npm-run-all": "^4.1.2",
+    "tsify": "^3.0.4",
     "tslint": "^4.5.1",
-    "typescript": "2.2.1",
-    "uglify-js": "^2.8.8",
+    "typescript": "2.6.2",
+    "uglify-js": "^3.3.7",
     "watchify": "^3.9.0"
   }
 }

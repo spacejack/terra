@@ -11,6 +11,7 @@
 // LICENSE: MIT
 // Copyright (c) 2016 by Mike Linkovich
 
+/// <reference path="types/three-global.d.ts" />
 import {Vec3, Color} from './vec'
 
 export interface Options {

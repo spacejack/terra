@@ -1,3 +1,5 @@
+/// <reference path="types/three-global.d.ts" />
+
 export default function create (
 	tex: THREE.Texture, radius: number, lats = 16, lngs = 32
 ) {

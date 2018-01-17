@@ -6,6 +6,7 @@
 
 // Uses grass shaders (see: shader/grass.*.glsl)
 
+/// <reference path="types/three-global.d.ts" />
 import {nrand} from './gmath'
 import {Vec2, Vec3, Color} from './vec'
 import simplex from './simplex'

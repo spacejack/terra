@@ -1,5 +1,6 @@
 // Copyright (c) 2016 by Mike Linkovich
 
+/// <reference path="types/three-global.d.ts" />
 import {$e} from './util'
 import {difAngle} from './gmath'
 import {Vec2, Vec3, Color} from './vec'
@@ -364,7 +365,7 @@ export function World ( assets: Assets,
 		const sunVisAngle = Math.sqrt(dy * dy + dp * dp)
 		if (sunVisAngle < GLARE_RANGE) {
 			const glare = MAX_GLARE * Math.pow((GLARE_RANGE - sunVisAngle) / (1.0 + MAX_GLARE), 0.75)
-			meshes.sunFlare.material.opacity = Math.max(0.0, glare)
+			;(meshes.sunFlare.material as THREE.MeshBasicMaterial).opacity = Math.max(0.0, glare)
 			meshes.sunFlare.visible = true
 		} else {
 			meshes.sunFlare.visible = false
@@ -373,13 +374,14 @@ export function World ( assets: Assets,
 
 	/** Update intro fullscreen fade from white */
 	function updateFade(dt: number) {
+		const mat = meshes.fade.material as THREE.MeshBasicMaterial
 		if (simT + dt >= INTRO_FADE_DUR) {
 			// fade is complete - hide cover
-			meshes.fade.material.opacity = 0.0
+			mat.opacity = 0.0
 			meshes.fade.visible = false
 		} else {
 			// update fade opacity
-			meshes.fade.material.opacity = 1.0 - Math.pow(simT / INTRO_FADE_DUR, 2.0)
+			mat.opacity = 1.0 - Math.pow(simT / INTRO_FADE_DUR, 2.0)
 		}
 	}
 

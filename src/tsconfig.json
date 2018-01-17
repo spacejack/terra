@@ -2,17 +2,8 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "lib": ["es2015", "dom"],
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "preserveConstEnums": true,
-    "removeComments": false,
-    "noLib": false,
-    "declaration": false,
-    "sourceMap": false,
-    "strictNullChecks": true,
-    "noImplicitThis": true
+    "lib": ["es2016", "dom"],
+    "strict": true
   },
   "files": ["main.ts"],
   "compileOnSave": false,

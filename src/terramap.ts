@@ -1,6 +1,7 @@
 // LICENSE: MIT
 // Copyright (c) 2016 by Mike Linkovich
 
+/// <reference path="types/three-global.d.ts" />
 import {pmod} from './gmath'
 import {Vec2, Vec3} from './vec'
 import {Heightfield} from './heightfield'

@@ -1,6 +1,6 @@
 // Copyright (c) 2016 by Mike Linkovich
 
-import {clamp, dot, pmod, sign} from './gmath'
+import {clamp, sign} from './gmath'
 import {Vec2, Vec3} from './vec'
 import * as input from './input'
 import notify from './notification'
@@ -74,7 +74,6 @@ export default function Player (heightField: Heightfield, waterHeight: number) {
 	})
 
 	// scratchpad vectors
-	//const _v = new THREE.Vector3()
 	const _a = Vec3.create()
 	const _d = Vec3.create()
 	const _p1 = Vec3.create()
