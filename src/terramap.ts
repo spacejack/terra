@@ -4,7 +4,7 @@
 /// <reference path="types/three-global.d.ts" />
 import {pmod} from './gmath'
 import {Vec2, Vec3} from './vec'
-import {Heightfield} from './heightfield'
+import Heightfield from './heightfield'
 
 /**
  * Create a texture containing height, lighting, etc. data
@@ -40,8 +40,8 @@ function computeData (hf: Heightfield, lightDir: Vec3, buf: Uint8ClampedArray) {
 	const tStart = Date.now()
 	for (let y = 0; y < h; ++y) {
 		for (let x = 0; x < w; ++x) {
-			let iSrc = y * w + x
-			let iDst = (h - y - 1) * w + x
+			const iSrc = y * w + x
+			const iDst = (h - y - 1) * w + x
 			// Get height, scale & store in R component
 			buf[iDst * 4 + 0] = Math.round(hf.heights[iSrc] / hf.maxHeight * 255.0)
 			// Get normal at this location to compute light
@@ -71,7 +71,7 @@ function computeShade (hf: Heightfield, lightDir: Vec3, ix: number, iy: number) 
 	const hdir = _v
 	const w = hf.xCount + 1
 	const h = hf.yCount + 1
-	let i = iy * w + ix
+	const i = iy * w + ix
 	let height = hf.heights[i] // height at this point
 	hdir.x = -lightDir.x
 	hdir.y = -lightDir.y

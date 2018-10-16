@@ -8,7 +8,7 @@ export const UV       = 0x08
 //export const INDEX    = 0x10
 export const ALL      = POSITION | NORMAL | COLOR | UV // | INDEX
 
-export interface BufferSet {
+interface BufferSet {
 	position?: Float32Array
 	normal?: Float32Array
 	color?: Float32Array
@@ -24,7 +24,7 @@ export interface BufferSet {
  * @param numId Number of indices
  * @param b Types of buffers to create (bitflags)
  */
-export function create (numVtx: number, numId: number, b?: number): BufferSet {
+function BufferSet (numVtx: number, numId: number, b?: number): BufferSet {
 	b = (typeof b === 'number') ? b & ALL : ALL
 	return {
 		position: (b & POSITION) ? new Float32Array(numVtx * 3) : undefined,
@@ -36,3 +36,5 @@ export function create (numVtx: number, numId: number, b?: number): BufferSet {
 		indexCount: 0
 	}
 }
+
+export default BufferSet

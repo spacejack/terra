@@ -10,8 +10,6 @@
 import {nrand} from './gmath'
 import {Vec2, Vec3, Color} from './vec'
 import simplex from './simplex'
-import * as bufferset from './bufferset'
-type BufferSet = bufferset.BufferSet
 
 const BLADE_SEGS = 4 // # of blade segments
 const BLADE_VERTS = (BLADE_SEGS + 1) * 2 // # of vertices per blade (1 side)
@@ -158,24 +156,24 @@ function initBladeIndices(id: Uint16Array, vc1: number, vc2: number, i: number) 
 function initBladeShapeVerts(shape: Float32Array, numBlades: number, offset: Float32Array) {
 	let noise = 0
 	for (let i = 0; i < numBlades; ++i) {
-		noise = Math.abs(simplex(offset[i*4+0] * 0.03, offset[i*4+1] * 0.03))
+		noise = Math.abs(simplex(offset[i * 4 + 0] * 0.03, offset[i * 4 + 1] * 0.03))
 		noise = noise * noise * noise
 		noise *= 5.0
-		shape[i*4+0] = BLADE_WIDTH + Math.random() * BLADE_WIDTH * 0.5 // width
-		shape[i*4+1] = BLADE_HEIGHT_MIN + Math.pow(Math.random(), 4.0) * (BLADE_HEIGHT_MAX - BLADE_HEIGHT_MIN) + // height
+		shape[i * 4 + 0] = BLADE_WIDTH + Math.random() * BLADE_WIDTH * 0.5 // width
+		shape[i * 4 + 1] = BLADE_HEIGHT_MIN + Math.pow(Math.random(), 4.0) * (BLADE_HEIGHT_MAX - BLADE_HEIGHT_MIN) + // height
 			noise
-		shape[i*4+2] = 0.0 + Math.random() * 0.3 // lean
-		shape[i*4+3] = 0.05 + Math.random() * 0.3 // curve
+		shape[i * 4 + 2] = 0.0 + Math.random() * 0.3 // lean
+		shape[i * 4 + 3] = 0.05 + Math.random() * 0.3 // curve
 	}
 }
 
 /** Set up positons & rotation for each blade of grass */
 function initBladeOffsetVerts(offset: Float32Array, numBlades: number, patchRadius: number) {
 	for (let i = 0; i < numBlades; ++i) {
-		offset[i*4+0] = nrand() * patchRadius // x
-		offset[i*4+1] = nrand() * patchRadius // y
-		offset[i*4+2] = 0.0 // z
-		offset[i*4+3] = Math.PI * 2.0 * Math.random() // rot
+		offset[i * 4 + 0] = nrand() * patchRadius // x
+		offset[i * 4 + 1] = nrand() * patchRadius // y
+		offset[i * 4 + 2] = 0.0 // z
+		offset[i * 4 + 3] = Math.PI * 2.0 * Math.random() // rot
 	}
 }
 

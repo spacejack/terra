@@ -8,19 +8,23 @@ import {Vec3} from './vec'
  *  Info returned when querying heightfield at coordinate X,Y
  */
 export interface HInfo {
-	i: number // cell (quad) index
-	t: number // triangle (0 top-left or 1 bottom-right)
-	z: number // height
-	n: Vec3   // normal
+	/** cell (quad) index */
+	i: number
+	/** triangle (0 top-left or 1 bottom-right) */
+	t: number
+	/** height */
+	z: number
+	/** normal */
+	n: Vec3
 }
 
-export module HInfo {
-	export function create() {
-		return {i: 0, t: 0, z: 0.0, n: Vec3.create()}
+export function HInfo(): HInfo {
+	return {
+		i: 0, t: 0, z: 0.0, n: Vec3.create()
 	}
 }
 
-export interface Options {
+export interface HeightfieldOptions {
 	cellSize?: number
 	minHeight?: number
 	maxHeight?: number
@@ -40,7 +44,7 @@ export interface Options {
  *  |/_|1
  *
  */
-export interface Heightfield {
+interface Heightfield {
 	cellSize: number
 	minHeight: number
 	maxHeight: number
@@ -57,7 +61,7 @@ export interface Heightfield {
  * Create a Heightfield using the given options.
  * Use either an image OR xCount, yCount and a heights array.
  */
-export function create (info: Options): Heightfield {
+function Heightfield (info: HeightfieldOptions): Heightfield {
 	const hf: Heightfield = {
 		cellSize: (info.cellSize && info.cellSize > 0) ? info.cellSize : 1.0,
 		minHeight: (typeof info.minHeight === 'number') ? info.minHeight : 0.0,
@@ -89,14 +93,97 @@ export function create (info: Options): Heightfield {
 	return hf
 }
 
+namespace Heightfield {
+	/**
+	 * Get heightfield info at point x,y. Outputs to hi.
+	 * @param wrap If true, x,y coords will be wrapped around if out of bounds,
+	 *             otherwise minHeight returned.
+	 * @param hi Struct to output result into.
+	 */
+	export function infoAt (hf: Heightfield, x: number, y: number, wrap: boolean, hi: HInfo) {
+		const ox = -(hf.xSize / 2.0) // bottom left of heightfield
+		const oy = -(hf.ySize / 2.0)
+
+		if (x < ox || x >= -ox || y < oy || y >= -oy) {
+			if (!wrap) {
+				// out of bounds
+				hi.i = -1
+				hi.z = hf.minHeight
+				hi.n.x = hi.n.y = hi.n.z = 0
+				hi.t = 0
+				return
+			}
+			// wrap around
+			x = pmod(x - ox, hf.xSize) + ox
+			y = pmod(y - oy, hf.ySize) + oy
+		}
+
+		const csz = hf.cellSize,
+			normals = hf.faceNormals,
+			n = hi.n,
+			ix = Math.floor((x - ox) / csz),
+			iy = Math.floor((y - oy) / csz),
+			ih = ix + iy * (hf.xCount + 1),  // height index
+			px = (x - ox) % csz,  // relative x,y within this quad
+			py = (y - oy) % csz
+
+		const i = ix + iy * hf.xCount  // tile index
+
+		if (py > 0 && px / py < 1.0) {
+			// top left tri
+			hi.t = 0
+			n.x = normals[i * 6 + 0]
+			n.y = normals[i * 6 + 1]
+			n.z = normals[i * 6 + 2]
+		}
+		else {
+			// bottom right tri
+			hi.t = 1
+			n.x = normals[i * 6 + 3]
+			n.y = normals[i * 6 + 4]
+			n.z = normals[i * 6 + 5]
+		}
+		hi.i = i
+		hi.z = getPlaneZ(n, hf.heights[ih], px, py)
+	}
+
+	// pre-allocated scratchpad object
+	const _hi = HInfo()
+
+	/**
+	 * Get height (z) at x,y
+	 * @param wrap If true, x,y coords will be wrapped around if out of bounds,
+	 *             otherwise minHeight returned.
+	 */
+	export function heightAt (hf: Heightfield, x: number, y: number, wrap = false) {
+		infoAt(hf, x, y, wrap, _hi)
+		return _hi.z
+	}
+
+	/**
+	 *  Given a plane with normal n and z=z0 at (x=0,y=0) find z at x,y.
+	 *  @param n Normal vector of the plane.
+	 *  @param z0 Height (z) coordinate of the plane at x=0,y=0.
+	 *  @param x X coordinate to find height (z) at.
+	 *  @param y Y coordinate to find height (z) at.
+	 */
+	export function getPlaneZ (n: Vec3, z0: number, x: number, y: number) {
+		return z0 - (n.x * x + n.y * y) / n.z
+	}
+}
+
+export default Heightfield
+
+// Internal helpers...
+
 /**
  * Generate heightfield from bitmap data. Lighter pixel colours are higher.
  */
 function genFromImg (
 	image: HTMLImageElement, hf: Heightfield
 ) {
-	let x: number, y: number, i: number, height: number,
-		w = image.width,
+	let x: number, y: number, i: number, height: number
+	const w = image.width,
 		h = image.height,
 		heightRange = hf.maxHeight - hf.minHeight
 
@@ -117,7 +204,7 @@ function genFromImg (
 	for (y = 0; y < h; ++y) {
 		for (x = 0; x < w; ++x) {
 			// flip vertical because textures are Y+
-			i = (x + (h-y-1) * w) * 4
+			i = (x + (h - y - 1) * w) * 4
 			//i = (x + y * w) * 4
 
 			// normalized altitude value (0-1)
@@ -175,9 +262,9 @@ function calcFaceNormals (hf: Heightfield) {
 
 			Vec3.cross(v0, v1, n)
 			Vec3.normalize(n, n)
-			normals[i+0] = n.x
-			normals[i+1] = n.y
-			normals[i+2] = n.z
+			normals[i + 0] = n.x
+			normals[i + 1] = n.y
+			normals[i + 2] = n.z
 
 			// 2 vectors of bottom-right tri
 			v0.x = csz
@@ -190,13 +277,13 @@ function calcFaceNormals (hf: Heightfield) {
 
 			Vec3.cross(v0, v1, n)
 			Vec3.normalize(n, n)
-			normals[i+3] = n.x
-			normals[i+4] = n.y
-			normals[i+5] = n.z
+			normals[i + 3] = n.x
+			normals[i + 4] = n.y
+			normals[i + 5] = n.z
 		}
 	}
 	const dt = Date.now() - tStart
-	console.log("computed "+i+" heightfield face normals in "+dt+"ms")
+	console.log(`computed ${i} heightfield face normals in ${dt}ms`)
 }
 
 function calcVertexNormals(hf: Heightfield) {
@@ -216,7 +303,7 @@ function calcVertexNormals(hf: Heightfield) {
 		}
 	}
 	const dt = Date.now() - tStart
-	console.log("computed "+(w*h)+" vertex normals in "+dt+"ms")
+	console.log(`computed ${w * h} vertex normals in ${dt}ms`)
 }
 
 /**
@@ -230,116 +317,39 @@ function computeVertexNormal(hf: Heightfield, vx: number, vy: number, n: Vec3) {
 	let qx = vx % hf.xCount
 	let qy = vy % hf.yCount
 	let ni = (qy * hf.xCount + qx) * 3 * 2
-	n.x = fnorms[ni+0]
-	n.y = fnorms[ni+1]
-	n.z = fnorms[ni+2]
+	n.x = fnorms[ni + 0]
+	n.y = fnorms[ni + 1]
+	n.z = fnorms[ni + 2]
 	ni += 3
-	n.x += fnorms[ni+0]
-	n.y += fnorms[ni+1]
-	n.z += fnorms[ni+2]
+	n.x += fnorms[ni + 0]
+	n.y += fnorms[ni + 1]
+	n.z += fnorms[ni + 2]
 
 	// 2nd tri of quad up and to the left
 	qx = pmod(qx - 1, hf.xCount)
 	ni = (qy * hf.xCount + qx) * 3 * 2 + 3
-	n.x += fnorms[ni+0]
-	n.y += fnorms[ni+1]
-	n.z += fnorms[ni+2]
+	n.x += fnorms[ni + 0]
+	n.y += fnorms[ni + 1]
+	n.z += fnorms[ni + 2]
 
 	// both tris of quad down and to the left
 	qy = pmod(qy - 1, hf.yCount)
 	ni = (qy * hf.xCount + qx) * 3 * 2
-	n.x += fnorms[ni+0]
-	n.y += fnorms[ni+1]
-	n.z += fnorms[ni+2]
+	n.x += fnorms[ni + 0]
+	n.y += fnorms[ni + 1]
+	n.z += fnorms[ni + 2]
 	ni += 3
-	n.x += fnorms[ni+0]
-	n.y += fnorms[ni+1]
-	n.z += fnorms[ni+2]
+	n.x += fnorms[ni + 0]
+	n.y += fnorms[ni + 1]
+	n.z += fnorms[ni + 2]
 
 	// 1st tri of quad down and to the right
 	qx = (qx + 1) % hf.xCount
 	ni = (qy * hf.xCount + qx) * 3 * 2
-	n.x += fnorms[ni+0]
-	n.y += fnorms[ni+1]
-	n.z += fnorms[ni+2]
+	n.x += fnorms[ni + 0]
+	n.y += fnorms[ni + 1]
+	n.z += fnorms[ni + 2]
 
 	// Normalize to 'average' the result normal
 	Vec3.normalize(n, n)
-}
-
-/**
- * Get heightfield info at point x,y. Outputs to hi.
- * @param wrap If true, x,y coords will be wrapped around if out of bounds,
- *             otherwise minHeight returned.
- * @param hi Struct to output result into.
- */
-export function infoAt (hf: Heightfield, x: number, y: number, wrap: boolean, hi: HInfo) {
-	const ox = -(hf.xSize / 2.0) // bottom left of heightfield
-	const oy = -(hf.ySize / 2.0)
-
-	if (x < ox || x >= -ox || y < oy || y >= -oy) {
-		if (!wrap) {
-			// out of bounds
-			hi.i = -1
-			hi.z = hf.minHeight
-			hi.n.x = hi.n.y = hi.n.z = 0
-			hi.t = 0
-			return
-		}
-		// wrap around
-		x = pmod(x - ox, hf.xSize) + ox
-		y = pmod(y - oy, hf.ySize) + oy
-	}
-
-	const csz = hf.cellSize,
-		normals = hf.faceNormals,
-		n = hi.n,
-		ix = Math.floor((x - ox) / csz),
-		iy = Math.floor((y - oy) / csz),
-		ih = ix + iy * (hf.xCount + 1),  // height index
-		px = (x - ox) % csz,  // relative x,y within this quad
-		py = (y - oy) % csz
-
-	const i = ix + iy * hf.xCount  // tile index
-
-	if (py > 0 && px / py < 1.0) {
-		// top left tri
-		hi.t = 0
-		n.x = normals[i * 6 + 0]
-		n.y = normals[i * 6 + 1]
-		n.z = normals[i * 6 + 2]
-	}
-	else {
-		// bottom right tri
-		hi.t = 1
-		n.x = normals[i * 6 + 3]
-		n.y = normals[i * 6 + 4]
-		n.z = normals[i * 6 + 5]
-	}
-	hi.i = i
-	hi.z = getPlaneZ(n, hf.heights[ih], px, py)
-}
-
-// pre-allocated scratchpad object
-const _hi = HInfo.create()
-
-/**
- * Get height (z) at x,y
- * @param wrap If true, x,y coords will be wrapped around if out of bounds,
- *             otherwise minHeight returned.
- */
-export function heightAt (hf: Heightfield, x: number, y: number, wrap = false) {
-	infoAt(hf, x, y, wrap, _hi)
-	return _hi.z
-}
-
-/**
- *  Given a plane with normal n and z=z0 at (x=0,y=0) find z at x,y.
- *  @param n Normal vector of the plane.
- *  @param z0 Height (z) coordinate of the plane at x=0,y=0.
- *  @param x X coordinate to find height (z) at.
- *  @param y Y coordinate to find height (z) at.
- */
-export function getPlaneZ (n: Vec3, z0: number, x: number, y: number) {
-	return z0 - (n.x * x + n.y * y) / n.z
 }

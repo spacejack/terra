@@ -11,7 +11,10 @@ import {Vec3, Color} from './vec'
 
 // Uses terrain shaders (see: shader/terrain.*.glsl)
 
-export interface Options {
+const MAX_INDICES = 262144 // 65536
+const TEX_SCALE = 1.0 / 6.0 // texture scale per quad
+
+export interface TerrainOptions {
 	textures: THREE.Texture[]
 	vertScript: string
 	fragScript: string
@@ -24,7 +27,7 @@ export interface Options {
 	transitionHigh: number
 }
 
-export interface Terrain {
+interface Terrain {
 	cellSize: number
 	xCellCount: number
 	yCellCount: number
@@ -33,41 +36,44 @@ export interface Terrain {
 	mesh: THREE.Mesh
 }
 
-const MAX_INDICES = 262144 // 65536
-const TEX_SCALE = 1.0 / 6.0 // texture scale per quad
-
-export function create(opts: Options) : Terrain {
+function Terrain (opts: TerrainOptions): Terrain {
 	// max square x,y divisions that will fit in max indices
 	const xCellCount = Math.floor(Math.sqrt(MAX_INDICES / (3 * 2)))
 	const yCellCount = xCellCount
 	const cellSize = 1.0 / opts.heightMapScale.x / xCellCount
 
 	return {
-		cellSize: cellSize,
-		xCellCount: xCellCount,
-		yCellCount: yCellCount,
+		cellSize,
+		xCellCount,
+		yCellCount,
 		xSize: xCellCount * cellSize,
 		ySize: yCellCount * cellSize,
 		mesh: createMesh(opts)
 	}
 }
 
-export function update(t: Terrain, x: number, y: number) {
-	const ix = Math.floor(x / t.cellSize)
-	const iy = Math.floor(y / t.cellSize)
-	const ox = ix * t.cellSize
-	const oy = iy * t.cellSize
-	const mat = t.mesh.material as THREE.RawShaderMaterial
-	let p = mat.uniforms['offset'].value as number[]
-	p[0] = ox
-	p[1] = oy
-	p = mat.uniforms['uvOffset'].value
-	p[0] = iy * TEX_SCALE // not sure why x,y need to be swapped here...
-	p[1] = ix * TEX_SCALE
+namespace Terrain {
+	export function update (t: Terrain, x: number, y: number) {
+		const ix = Math.floor(x / t.cellSize)
+		const iy = Math.floor(y / t.cellSize)
+		const ox = ix * t.cellSize
+		const oy = iy * t.cellSize
+		const mat = t.mesh.material as THREE.RawShaderMaterial
+		let p = mat.uniforms['offset'].value as number[]
+		p[0] = ox
+		p[1] = oy
+		p = mat.uniforms['uvOffset'].value
+		p[0] = iy * TEX_SCALE // not sure why x,y need to be swapped here...
+		p[1] = ix * TEX_SCALE
+	}
 }
 
+export default Terrain
+
+// Internal helpers...
+
 /** Creates a textured plane larger than the viewer will ever travel */
-function createMesh(opts: Options) {
+function createMesh (opts: TerrainOptions) {
 	// max x,y divisions that will fit 65536 indices
 	const xCellCount = Math.floor(Math.sqrt(MAX_INDICES / (3 * 2)))
 	const yCellCount = xCellCount
@@ -140,7 +146,7 @@ function createVtxBuffers (cellSize: number, xcount: number, ycount: number) {
 			uv[j++] = v * TEX_SCALE
 		}
 	}
-	return {position: pos, uv: uv}
+	return {position: pos, uv}
 }
 
 /**

@@ -1,30 +1,48 @@
 {
+  "extends": ["tslint:recommended"],
+  "defaultSeverity": "warning",
   "rules": {
-    "class-name": true,
-    "comment-format": [
-      false,
-      "check-space"
-    ],
+    "array-type": false,
+    "arrow-parens": false,
+    "ban-types": false,
+    "class-name": false,
+    "comment-format": [false, "check-space"],
+    "curly": false,
+    "forin": true,
+    "indent": [true, "tabs"],
+    "interface-name": false,
+    "interface-over-type-literal": false,
+    "jsdoc-format": false,
+    "max-line-length": [false],
+    "member-access": false,
+    "no-bitwise": false,
+    "no-console": false,
     "no-duplicate-variable": true,
+    "no-empty": false,
     "no-eval": true,
     "no-internal-module": false,
+    "no-namespace": false,
+    "no-reference": false,
+    "no-reference-import": true,
+    "no-shadowed-variable": false,
+    "no-string-literal": false,
     "no-trailing-whitespace": true,
-    "no-unused-variable": true,
     "no-var-keyword": true,
-    "one-line": [
-      true,
-      "check-open-brace",
-      "check-whitespace"
-    ],
-    "quotemark": [
-      false,
-      "double"
-    ],
+    "no-unused-expression": false,
+    "no-unused-variable": true,
+    "object-literal-key-quotes": [true, "as-needed"],
+    "object-literal-sort-keys": false,
+    "one-line": [true, "check-open-brace", "check-whitespace"],
+    "one-variable-per-declaration": false,
+    "only-arrow-functions": false,
+    "ordered-imports": false,
+    "prefer-for-of": false,
+    "prefer-method-signature": true,
+    "quotemark": [false, "double"],
     "semicolon": [true, "never"],
-    "triple-equals": [
-      true,
-      "allow-null-check"
-    ],
+    "space-before-function-paren": false,
+    "trailing-comma": false,
+    "triple-equals": [true, "allow-null-check"],
     "typedef-whitespace": [
       false,
       {
@@ -35,10 +53,8 @@
         "variable-declaration": "nospace"
       }
     ],
-    "variable-name": [
-      true,
-      "ban-keywords"
-    ],
+    "unified-signatures": false,
+    "variable-name": [true, "ban-keywords"],
     "whitespace": [
       true,
       "check-branch",

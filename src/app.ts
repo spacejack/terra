@@ -1,10 +1,10 @@
 import {$e, $i, detectWebGL} from './util'
-import {Assets, Loader} from './loader'
+import Loader, {Assets} from './loader'
 import * as input from './input'
 import * as anim from './anim'
 import * as fullscreen from './fullscreen'
 import * as browser from './browser'
-import {IWorld, World} from './world'
+import World from './world'
 
 interface Config {
 	blades: number
@@ -34,7 +34,7 @@ export default function App() {
 	let displayHeight = 480
 
 	let assets: Assets
-	let world: IWorld
+	let world: World
 
 	let isFullscreen = fullscreen.is()
 
@@ -153,7 +153,7 @@ export default function App() {
 						fullscreen.toggle($e('app_container'))
 					}
 					$e('btn_restart').onclick = () => {
-						document.location.reload()
+						document.location!.reload()
 					}
 					start()
 				})
@@ -213,6 +213,6 @@ export default function App() {
 
 	//  Return public interface
 	return {
-		run: run
+		run
 	}
 }

@@ -24,7 +24,7 @@ export interface AssetList {
 /**
  * Create a Loader instance
  */
-export function Loader() {
+function Loader() {
 
 	let isLoading = false
 	let totalToLoad = 0
@@ -34,7 +34,7 @@ export function Loader() {
 	let progress_cb: ((p: number) => any) | undefined
 	let error_cb: ((e: string) => any) | undefined
 	let done_cb: ((ok: boolean) => any) | undefined
-	let assets: Assets = {images: {}, text: {}, textures: {}}
+	const assets: Assets = {images: {}, text: {}, textures: {}}
 
 	/**
 	 * Start loading a list of assets
@@ -134,8 +134,12 @@ export function Loader() {
 	 *  Public interface
 	 */
 	return {
-		load: load,
+		load,
 		getAssets: () => assets
 	}
 
 } // end Loader
+
+interface Loader extends ReturnType<typeof Loader> {}
+
+export default Loader

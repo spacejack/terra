@@ -28,11 +28,11 @@ class Grad {
 	}
 
 	dot2 (x: number, y: number) {
-		return this.x*x + this.y*y
+		return this.x * x + this.y * y
 	}
 
 	dot3 (x: number, y: number, z: number) {
-		return this.x*x + this.y*y + this.z*z
+		return this.x * x + this.y * y + this.z * z
 	}
 }
 
@@ -82,7 +82,7 @@ function seed (seed: number) {
 		if (i & 1) {
 			v = p[i] ^ (seed & 255)
 		} else {
-			v = p[i] ^ ((seed>>8) & 255)
+			v = p[i] ^ ((seed >> 8) & 255)
 		}
 
 		perm[i] = perm[i + 256] = v
@@ -106,7 +106,8 @@ export default function simplex(xin: number, yin: number) {
 	// Determine which simplex we are in.
 	let i1: number, j1: number // Offsets for second (middle) corner of simplex in (i,j) coords
 	if (x0 > y0) { // lower triangle, XY order: (0,0)->(1,0)->(1,1)
-		i1=1; j1=0
+		i1 = 1
+		j1 = 0
 	} else {    // upper triangle, YX order: (0,0)->(0,1)->(1,1)
 		i1 = 0
 		j1 = 1
@@ -133,14 +134,14 @@ export default function simplex(xin: number, yin: number) {
 		n0 = t0 * t0 * gi0.dot2(x0, y0)  // (x,y) of grad3 used for 2D gradient
 	}
 	let t1 = 0.5 - x1 * x1 - y1 * y1
-	if (t1<0) {
+	if (t1 < 0) {
 		n1 = 0
 	} else {
 		t1 *= t1
 		n1 = t1 * t1 * gi1.dot2(x1, y1)
 	}
 	let t2 = 0.5 - x2 * x2 - y2 * y2
-	if (t2<0) {
+	if (t2 < 0) {
 		n2 = 0
 	} else {
 		t2 *= t2

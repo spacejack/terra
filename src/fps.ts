@@ -4,8 +4,8 @@
 /**
  * Create instance of Frames Per Second Monitor
  */
-export function FPSMonitor(num = 16) {
-	let ticks = new Array<number>(num)
+export default function FPSMonitor(num = 16) {
+	const ticks = new Array<number>(num)
 	let sum = 0
 	let index = 0
 	let f = 60.0  // frames per sec initial assumption

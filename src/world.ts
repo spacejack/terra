@@ -7,15 +7,14 @@ import {Vec2, Vec3, Color} from './vec'
 import * as logger from './logger'
 import * as input from './input'
 import {Assets} from './loader'
-import createSkyDome from './skydome'
-import * as heightfield from './heightfield'
-type Heightfield = heightfield.Heightfield
+import * as skydome from './skydome'
+import Heightfield, {HInfo} from './heightfield'
 import * as grass from './grass'
-import * as terrain from './terrain'
+import Terrain from './terrain'
 import * as terramap from './terramap'
 import * as water from './water'
 import Player from './player'
-import {FPSMonitor} from './fps'
+import FPSMonitor from './fps'
 
 const VIEW_DEPTH = 2000.0
 
@@ -46,11 +45,6 @@ const GLARE_COLOR = Color.create(1.0, 0.8, 0.4)
 
 const INTRO_FADE_DUR = 2000
 
-export interface IWorld {
-	doFrame() : void
-	resize(w: number, h: number) : void
-}
-
 interface MeshSet {
 	terrain: THREE.Mesh
 	grass: THREE.Mesh
@@ -60,21 +54,27 @@ interface MeshSet {
 	fade: THREE.Mesh // used for intro fade from white
 }
 
+interface World {
+	doFrame() : void
+	resize(w: number, h: number) : void
+}
+
 ///////////////////////////////////////////////////////////////////////
 /**
  * Create a World instance
  */
-export function World ( assets: Assets,
+function World (
+	assets: Assets,
 	numGrassBlades: number, grassPatchRadius: number,
 	displayWidth: number, displayHeight: number,
 	antialias: boolean
-) : IWorld {
+): World {
 
 	const canvas = $e('app_canvas') as HTMLCanvasElement
 
 	// Make canvas transparent so it isn't rendered as black for 1 frame at startup
 	const renderer = new THREE.WebGLRenderer({
-		canvas: canvas, antialias: antialias, clearColor: 0xFFFFFF, clearAlpha: 1, alpha: true
+		canvas, antialias, clearColor: 0xFFFFFF, clearAlpha: 1, alpha: true
 	})
 	if (!renderer) {
 		throw new Error("Failed to create THREE.WebGLRenderer")
@@ -116,7 +116,7 @@ export function World ( assets: Assets,
 		1.0 / HEIGHTFIELD_SIZE,
 		HEIGHTFIELD_HEIGHT
 	)
-	const heightField = heightfield.create({
+	const heightField = Heightfield({
 		cellSize: hfCellSize,
 		minHeight: 0.0,
 		maxHeight: heightMapScale.z,
@@ -137,26 +137,26 @@ export function World ( assets: Assets,
 		vertScript: assets.text['grass.vert'],
 		fragScript: assets.text['grass.frag'],
 		heightMap: terraMap,
-		heightMapScale: heightMapScale,
+		heightMapScale,
 		fogColor: FOG_COLOR,
 		fogFar: fogDist,
 		grassFogFar: grassFogDist,
 		grassColor: GRASS_COLOR,
 		transitionLow: BEACH_TRANSITION_LOW,
 		transitionHigh: BEACH_TRANSITION_HIGH,
-		windIntensity: windIntensity
+		windIntensity
 	})
 	// Set a specific render order - don't let three.js sort things for us.
 	meshes.grass.renderOrder = 10
 	scene.add(meshes.grass)
 
 	// Terrain mesh
-	const terra = terrain.create({
+	const terra = Terrain({
 		textures: [assets.textures['terrain1'], assets.textures['terrain2']],
 		vertScript: assets.text['terrain.vert'],
 		fragScript: assets.text['terrain.frag'],
 		heightMap: terraMap,
-		heightMapScale: heightMapScale,
+		heightMapScale,
 		fogColor: FOG_COLOR,
 		fogFar: fogDist,
 		grassFogFar: grassFogDist,
@@ -168,7 +168,7 @@ export function World ( assets: Assets,
 	scene.add(meshes.terrain)
 
 	// Skydome
-	meshes.sky = createSkyDome(assets.textures['skydome'], VIEW_DEPTH * 0.95)
+	meshes.sky = skydome.createMesh(assets.textures['skydome'], VIEW_DEPTH * 0.95)
 	meshes.sky.renderOrder = 30
 	scene.add(meshes.sky)
 	meshes.sky.position.z = -25.0
@@ -287,7 +287,7 @@ export function World ( assets: Assets,
 	///////////////////////////////////////////////////////////////////
 	// Private instance methods
 
-	const _hinfo = heightfield.HInfo.create()
+	const _hinfo = HInfo()
 	const _v = Vec2.create(0.0, 0.0)
 
 	/**
@@ -310,7 +310,7 @@ export function World ( assets: Assets,
 		const ppitch = player.state.pitch
 		const proll = player.state.roll
 
-		heightfield.infoAt(heightField, ppos.x, ppos.y, true, _hinfo)
+		Heightfield.infoAt(heightField, ppos.x, ppos.y, true, _hinfo)
 		const groundHeight = _hinfo.z
 
 		if (logger.isVisible()) {
@@ -342,7 +342,7 @@ export function World ( assets: Assets,
 		)
 		grass.update(meshes.grass, t, ppos, pdir, drawPos)
 
-		terrain.update(terra, ppos.x, ppos.y)
+		Terrain.update(terra, ppos.x, ppos.y)
 
 		water.update(meshes.water, ppos)
 
@@ -396,3 +396,5 @@ export function World ( assets: Assets,
 		resize
 	}
 }
+
+export default World

@@ -37,6 +37,6 @@ export const isMobile = (function(){
 		Opera: o,
 		Windows: w,
 		FireFox: ff,
-		any: any
+		any
 	}
 }())

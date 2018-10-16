@@ -3,17 +3,21 @@
 
 declare global {
 	interface Document {
-		mozCancelFullScreen?: () => void
-		msExitFullscreen?: () => void
 		mozFullScreenElement?: Element
 		msFullscreenElement?: Element
-		msRequestFullscreen?: () => void
-		mozRequestFullScreen?: () => void
+		webkitFullscreenElement?: Element
+		fullscreenElement?: Element
+		mozCancelFullScreen?(): void
+		msExitFullscreen?(): void
+		msRequestFullscreen?(): void
+		mozRequestFullScreen?(): void
+		webkitExitFullscreen?(): void
 		//mozFullscreenEnabled?: boolean
 	}
 	interface Element {
-		msRequestFullscreen?: () => void
-		mozRequestFullScreen?: () => void
+		msRequestFullscreen?(): void
+		mozRequestFullScreen?(): void
+		webkitRequestFullscreen?(): void
 	}
 }
 

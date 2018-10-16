@@ -14,7 +14,7 @@
 /// <reference path="types/three-global.d.ts" />
 import {Vec3, Color} from './vec'
 
-export interface Options {
+export interface WaterOptions {
 	envMap: THREE.Texture
 	vertScript: string
 	fragScript: string
@@ -27,7 +27,8 @@ export interface Options {
 
 let _time = 0
 
-export function createMesh(opts: Options) {
+/** Create Water Mesh */
+export function createMesh (opts: WaterOptions) {
 	opts.envMap.wrapS = opts.envMap.wrapT = THREE.RepeatWrapping
 	opts.envMap.minFilter = opts.envMap.magFilter = THREE.LinearFilter
 	opts.envMap.generateMipmaps = false
@@ -54,7 +55,7 @@ export function createMesh(opts: Options) {
 	return mesh
 }
 
-export function update(mesh: THREE.Mesh, viewPos: Vec3) {
+export function update (mesh: THREE.Mesh, viewPos: Vec3) {
 	mesh.position.x = viewPos.x
 	mesh.position.y = viewPos.y
 	const mat = mesh.material as THREE.RawShaderMaterial

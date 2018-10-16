@@ -4,8 +4,7 @@ import {clamp, sign} from './gmath'
 import {Vec2, Vec3} from './vec'
 import * as input from './input'
 import notify from './notification'
-import * as heightfield from './heightfield'
-type Heightfield = heightfield.Heightfield
+import Heightfield from './heightfield'
 import * as log from './logger'
 
 const DEFAULT_HEIGHT = 0.0
@@ -41,7 +40,7 @@ const MODE_MAN  = 2
 const NUM_MODES = 3
 
 /** Creates a Player instance (User first person camera) */
-export default function Player (heightField: Heightfield, waterHeight: number) {
+function Player (heightField: Heightfield, waterHeight: number) {
 
 	//let autoplay = true
 	let mode = MODE_AUTO
@@ -148,24 +147,24 @@ export default function Player (heightField: Heightfield, waterHeight: number) {
 
 		// Actual height at camera
 		const groundHeight = Math.max(
-			heightfield.heightAt(heightField, state.pos.x, state.pos.y, true),
+			Heightfield.heightAt(heightField, state.pos.x, state.pos.y, true),
 			waterHeight
 		)
 		// Look ahead heights
 		const h1 = Math.max(
-			heightfield.heightAt(heightField, _p1.x, _p1.y, true),
+			Heightfield.heightAt(heightField, _p1.x, _p1.y, true),
 			waterHeight
 		)
 		const h2 = Math.max(
-			heightfield.heightAt(heightField, _p2.x, _p2.y, true),
+			Heightfield.heightAt(heightField, _p2.x, _p2.y, true),
 			waterHeight
 		)
 		const h3 = Math.max(
-			heightfield.heightAt(heightField, _p3.x, _p3.y, true),
+			Heightfield.heightAt(heightField, _p3.x, _p3.y, true),
 			waterHeight
 		)
 		//let minHeight = (groundHeight + h1 + h2 + h3) / 4.0
-		let minHeight = Math.max(Math.max(Math.max(groundHeight, h1), h2), h3)
+		const minHeight = Math.max(Math.max(Math.max(groundHeight, h1), h2), h3)
 		let floatVel = (state.floatHeight < minHeight) ?
 			(minHeight - state.floatHeight) : (groundHeight - state.floatHeight)
 		if (floatVel < 0) {
@@ -210,17 +209,17 @@ export default function Player (heightField: Heightfield, waterHeight: number) {
 			ra = ROLL_ACCEL
 		}
 		// calc roll resist forces
-		let rr = -state.roll * ROLL_RESIST
-		let rf = -sign(state.rollVel) * ROLL_FRIC * Math.abs(state.rollVel)
+		const rr = -state.roll * ROLL_RESIST
+		const rf = -sign(state.rollVel) * ROLL_FRIC * Math.abs(state.rollVel)
 		// total roll accel
 		ra = ra + rr + rf
 		state.rollVel += ra * ft
 		state.roll += state.rollVel * ft
 
 		// Calc yaw accel
-		let ya = -state.roll * YAW_ACCEL
+		const ya = -state.roll * YAW_ACCEL
 		// yaw drag
-		let yd = -sign(state.yawVel) * Math.abs(Math.pow(state.yawVel, 3.0)) * YAW_DRAG
+		const yd = -sign(state.yawVel) * Math.abs(Math.pow(state.yawVel, 3.0)) * YAW_DRAG
 		// update yaw
 		state.yawVel += (ya + yd) * ft
 		state.yaw += state.yawVel * ft
@@ -233,8 +232,8 @@ export default function Player (heightField: Heightfield, waterHeight: number) {
 			pa = PITCH_ACCEL * 0.5
 		}
 		// Calc pitch resist forces
-		let pr = -state.pitch * PITCH_RESIST
-		let pf = -sign(state.pitchVel) * PITCH_FRIC * Math.abs(state.pitchVel)
+		const pr = -state.pitch * PITCH_RESIST
+		const pf = -sign(state.pitchVel) * PITCH_FRIC * Math.abs(state.pitchVel)
 		// total pitch accel
 		pa = pa + pr + pf
 		state.pitchVel += pa * ft
@@ -267,7 +266,7 @@ export default function Player (heightField: Heightfield, waterHeight: number) {
 		state.pos.y += state.vel.y * ft
 		state.pos.z += state.vel.z * ft
 		const groundHeight = Math.max(
-			heightfield.heightAt(heightField, state.pos.x, state.pos.y, true),
+			Heightfield.heightAt(heightField, state.pos.x, state.pos.y, true),
 			waterHeight
 		)
 		if (state.pos.z < groundHeight + MIN_HEIGHT) {
@@ -319,7 +318,7 @@ export default function Player (heightField: Heightfield, waterHeight: number) {
 		state.pos.z += state.vel.z * ft
 
 		const groundHeight = Math.max(
-			heightfield.heightAt(heightField, state.pos.x, state.pos.y, true),
+			Heightfield.heightAt(heightField, state.pos.x, state.pos.y, true),
 			waterHeight
 		)
 		if (state.pos.z < groundHeight + MIN_HEIGHT) {
@@ -333,9 +332,13 @@ export default function Player (heightField: Heightfield, waterHeight: number) {
 	 * Public interface
 	 */
 	return {
-		update: update,
-		state: state,
-		getMode: getMode,
-		nextMode: nextMode
+		update,
+		state,
+		getMode,
+		nextMode
 	}
 }
+
+interface Player extends ReturnType<typeof Player> {}
+
+export default Player

@@ -3,12 +3,10 @@
     "target": "es5",
     "module": "commonjs",
     "lib": ["es2016", "dom"],
-    "strict": true
+    "strict": true,
+    "esModuleInterop": true
   },
   "files": ["main.ts"],
   "compileOnSave": false,
-  "buildOnSave": false,
-  "atom": {
-    "rewriteTsconfig": false
-  }
+  "buildOnSave": false
 }
