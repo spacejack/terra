@@ -1,14 +1,14 @@
 ## Terra
 
-© 2017 by Mike Linkovich • www.spacejack.ca
+© 2017-2020 by Mike Linkovich • spacejack.github.io
 
 ---
 
-## [Run the Demo](http://www.spacejack.ca/projects/terra/)
+## [Run the Demo](https://spacejack.github.io/terra/)
 
 ![screenshot](screenshots/intro.jpg?raw=true)
 
-This is a followup to a [previous experiment](http://github.com/spacejack/poaceae) to render grass as geometry with a vertex shader. This demo adds terrain elevation, improved lighting, grass animation, wind, water and other details.
+This is a followup to a [previous experiment](https://github.com/spacejack/poaceae) to render grass as geometry with a vertex shader. This demo adds terrain elevation, improved lighting, grass animation, wind, water and other details.
 
 Additionally, this project has been updated since its initial release. It now features terrain texturing, transitions between terrain types, more grass lighting improvements, better wind animation, a few minor fixes and a better out-of-the-box build with browserify and TypeScript 2.1. And finally this readme has been re-written to provide a more detailed description of the implementation.
 
@@ -84,7 +84,7 @@ The alpha channel remains unused for this demo, however the extra channel could 
 
 This heightfield data is uploaded to video memory as a texture which can be sampled by the grass and terrain shaders.
 
-For an in-depth article on terrain rendering with more advanced techniques for landscape detail, levels of detail by distance and texture types, see Jasmine Kent's [Gamasutra article](http://www.gamasutra.com/blogs/JasmineKent/20130904/199521/WebGL_Terrain_Rendering_in_Trigger_Rally__Part_1.php).
+For an in-depth article on terrain rendering with more advanced techniques for landscape detail, levels of detail by distance and texture types, see Jasmine Kent's [Gamasutra article](https://www.gamasutra.com/blogs/JasmineKent/20130904/199521/WebGL_Terrain_Rendering_in_Trigger_Rally__Part_1.php).
 
 #### Terrain textures and transitions
 
@@ -143,7 +143,7 @@ Outputs terra.js in `public/js`.
 
 This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License:
 
-http://creativecommons.org/licenses/by-nc/4.0/
+https://creativecommons.org/licenses/by-nc/4.0/
 
 Individual sources where indicated are licensed MIT
 
@@ -151,7 +151,7 @@ Individual sources where indicated are licensed MIT
 
 ## Credits
 
-This demo uses the awesome [three.js](http://www.threejs.org/) library.
+This demo uses the awesome [three.js](https://threejs.org/) library.
 
 Simplex noise by Stefan Gustavson and Joseph Gentle.
 
