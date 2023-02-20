@@ -1,5 +1,0 @@
-{
-  "editor.insertSpaces": false,
-  "files.trimTrailingWhitespace": true,
-  "typescript.tsdk": "node_modules/typescript/lib"
-}

@@ -1,4 +1,2 @@
-node_modules
-creative
-npm-debug.log
-*.db
+nbproject
+.gitignore
